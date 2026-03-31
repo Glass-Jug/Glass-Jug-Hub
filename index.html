@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glass Jug Hub</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #0f172a;
+            color: #e5e7eb;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #1e293b, #020617);
+        }
+
+        header img {
+            width: 150px;
+            border-radius: 20px;
+        }
+
+        header h1 {
+            margin: 15px 0 5px;
+            font-size: 2.5em;
+        }
+
+        header p {
+            color: #94a3b8;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+            background-color: #020617;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        nav a {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .lang-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 6px;
+            background-color: #38bdf8;
+            color: #020617;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .lang-btn:hover {
+            background-color: #0ea5e9;
+        }
+
+        section {
+            max-width: 900px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        .card {
+            background-color: #1e293b;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 12px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #020617;
+            color: #64748b;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #38bdf8;
+            color: #020617;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background-color: #0ea5e9;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <img src="https://static.wikia.nocookie.net/glass-jug/images/b/b5/Site-background-light/revision/latest/scale-to-width-down/1000?cb=20250724091404">
+    <h1>Glass Jug Studios</h1>
+    <p>Games • Films</p>
+</header>
+
+<nav>
+    <a href="#about" id="nav-about">About</a>
+    <a href="#news" id="nav-news">News</a>
+    <a href="#links" id="nav-links">Links</a>
+
+    <button class="lang-btn" onclick="setLang('en')">English (UK)</button>
+    <button class="lang-btn" onclick="setLang('cz')">Czech (Bohemia)</button>
+    <button class="lang-btn" onclick="setLang('es')">Spanish (Spain)</button>
+    <button class="lang-btn" onclick="setLang('pt-pt')">Portuguese (Portugal)</button>
+    <button class="lang-btn" onclick="setLang('pt-br')">Pörtuguese (Brazil)</button>
+</nav>
+
+<section id="about">
+    <h2 id="about-title">About Us</h2>
+    <div class="card">
+        <p id="about-text"></p>
+    </div>
+</section>
+
+<section id="news">
+    <h2 id="news-title">News</h2>
+    <div class="card">
+        <p id="news-text"></p>
+    </div>
+</section>
+
+<section id="links">
+    <h2 id="links-title">Official Links</h2>
+
+    <div class="card">
+        <p><strong>Roblox Group</strong></p>
+        <a class="button" id="btn-visit1" href="https://www.roblox.com/communities/34415562/Glass-Jug-Games#!/about" target="_blank">Visit</a>
+    </div>
+
+    <div class="card">
+        <p><strong>Itch.io</strong></p>
+        <a class="button" id="btn-visit2" href="https://glass-jug.itch.io/" target="_blank">Visit</a>
+    </div>
+
+    <div class="card">
+        <p><strong>Wiki</strong></p>
+        <a class="button" id="btn-visit3" href="https://glass-jug.fandom.com/wiki/Glass_Jug_Wiki" target="_blank">Visit</a>
+    </div>
+
+    <div class="card">
+        <p><strong>Matrix Chat</strong></p>
+        <a class="button" id="btn-join1" href="https://matrix.to/#/#oGJc:matrix.org" target="_blank">Join</a>
+    </div>
+
+    <div class="card">
+        <p><strong>Discord</strong></p>
+        <a class="button" id="btn-join2" href="https://discord.gg/6TnS7nwEmF" target="_blank">Join</a>
+    </div>
+
+    <div class="card">
+        <p><strong>Community Poll Results</strong></p>
+        <a class="button" id="btn-view" href="https://glass-jug.github.io/Community-poll-results/" target="_blank">View</a>
+    </div>
+</section>
+
+<footer>
+    <p>hi :man_mage: :bacon: </p>
+</footer>
+
+<script>
+const translations = {
+    en: {
+        navAbout: "About",
+        navNews: "News",
+        navLinks: "Links",
+        about: "About Us",
+        aboutText: "We are Glass Jug - Czech indie game development and animation team, we started 11 November 2023, and we currently have 5 members: APlum (Owner), Mimoň, yUser (Main dev), Erokl (does nothing), Annonymous person (is annonymous)",
+        news: "News",
+        newsText: "Nothing here for now.",
+        links: "Official Links",
+        visit: "Visit",
+        join: "Join",
+        view: "View"
+    },
+    cz: {
+        navAbout: "O nás",
+        navNews: "Novinky",
+        navLinks: "Odkazy",
+        about: "O nás",
+        aboutText: "Jsme Glass Jug - nezávislý český vývojářský a animační tým, začli jsme 11. listopadu 2023 a v současné době máme 5 členů: APlum (vlastník), Mimoň, yUser (hlavní vývojář), Erokl (nedělá nic), Anonymní osoba (velmi anonymní)",
+        news: "Novinky",
+        newsText: "Zatím tu nic není.",
+        links: "Odkazy",
+        visit: "Navštívit",
+        join: "Připojit se",
+        view: "Zobrazit"
+    },
+    es: {
+        navAbout: "Sobre",
+        navNews: "Noticias",
+        navLinks: "Enlaces",
+        about: "Sobre nosotros",
+        aboutText: "Not translated yet, tell us on Discord, etc. what to put here...",
+        news: "Noticias",
+        newsText: "Nada aquí por ahora.",
+        links: "Enlaces oficiales",
+        visit: "Visitar",
+        join: "Unirse",
+        view: "Ver"
+    },
+    "pt-pt": {
+        navAbout: "Sobre",
+        navNews: "Notícias",
+        navLinks: "Ligações",
+        about: "Sobre nós",
+        aboutText: "Not translated yet, tell us on Discord, etc. what to put here...",
+        news: "Notícias",
+        newsText: "Nada aqui por enquanto.",
+        links: "Ligações oficiais",
+        visit: "Visitar",
+        join: "Entrar",
+        view: "Ver"
+    },
+    "pt-br": {
+        navAbout: "Sobre",
+        navNews: "Notícias",
+        navLinks: "Links",
+        about: "Sobre nós",
+        aboutText: "Not translated yet, tell us on Discord, etc. what to put here...",
+        news: "Notícias",
+        newsText: "Nada aqui por enquanto.",
+        links: "Links oficiais",
+        visit: "Visitar",
+        join: "Entrar",
+        view: "Ver"
+    }
+};
+
+function setLang(lang) {
+    localStorage.setItem("lang", lang);
+
+    document.getElementById("nav-about").innerText = translations[lang].navAbout;
+    document.getElementById("nav-news").innerText = translations[lang].navNews;
+    document.getElementById("nav-links").innerText = translations[lang].navLinks;
+
+    document.getElementById("about-title").innerText = translations[lang].about;
+    document.getElementById("about-text").innerText = translations[lang].aboutText;
+
+    document.getElementById("news-title").innerText = translations[lang].news;
+    document.getElementById("news-text").innerText = translations[lang].newsText;
+
+    document.getElementById("links-title").innerText = translations[lang].links;
+
+    document.getElementById("btn-visit1").innerText = translations[lang].visit;
+    document.getElementById("btn-visit2").innerText = translations[lang].visit;
+    document.getElementById("btn-visit3").innerText = translations[lang].visit;
+
+    document.getElementById("btn-join1").innerText = translations[lang].join;
+    document.getElementById("btn-join2").innerText = translations[lang].join;
+
+    document.getElementById("btn-view").innerText = translations[lang].view;
+}
+
+const savedLang = localStorage.getItem("lang") || "en";
+setLang(savedLang);
+</script>
+
+</body>
+</html>
