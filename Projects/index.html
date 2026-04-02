@@ -173,12 +173,98 @@
 
 <script>
 const translations = {
-    en: { projects: "Projects", btnLink: "Link" },
-    cz: { projects: "Projekty", btnLink: "Odkaz" },
-    es: { projects: "Proyectos", btnLink: "Enlace" },
-    ja: { projects: "プロジェクト", btnLink: "リンク" },
-    "pt-pt": { projects: "Projetos", btnLink: "Link" },
-    "pt-br": { projects: "Projetos", btnLink: "Link" }
+    en: { 
+        projects: "Projects", 
+        btnLink: "Link",
+        covers: {
+            nawd1: "https://via.placeholder.com/220x120.png?text=NAWD1+EN",
+            nawd2: "https://via.placeholder.com/220x120.png?text=NAWD2+EN",
+            nawd3: "https://via.placeholder.com/220x120.png?text=NAWD3+EN",
+            superhaste: "https://via.placeholder.com/220x120.png?text=Super+Haste+EN",
+            richdistricts: "https://via.placeholder.com/220x120.png?text=1-2+Rich+Districts+EN"
+        }
+    },
+    cz: { 
+        projects: "Projekty", 
+        btnLink: "Odkaz",
+        covers: {
+            nawd1: "https://via.placeholder.com/220x120.png?text=NAWD1+CZ",
+            nawd2: "https://via.placeholder.com/220x120.png?text=NAWD2+CZ",
+            nawd3: "https://via.placeholder.com/220x120.png?text=NAWD3+CZ",
+            superhaste: "https://via.placeholder.com/220x120.png?text=Super+Haste+CZ",
+            richdistricts: "https://via.placeholder.com/220x120.png?text=1-2+Rich+Districts+CZ"
+        }
+    },
+    es: { 
+        projects: "Proyectos", 
+        btnLink: "Enlace",
+        covers: {
+            nawd1: "https://via.placeholder.com/220x120.png?text=NAWD1+ES",
+            nawd2: "https://via.placeholder.com/220x120.png?text=NAWD2+ES",
+            nawd3: "https://via.placeholder.com/220x120.png?text=NAWD3+ES",
+            superhaste: "https://via.placeholder.com/220x120.png?text=Super+Haste+ES",
+            richdistricts: "https://via.placeholder.com/220x120.png?text=1-2+Rich+Districts+ES"
+        }
+    },
+    ja: { 
+        projects: "プロジェクト", 
+        btnLink: "リンク",
+        covers: {
+            nawd1: "https://via.placeholder.com/220x120.png?text=NAWD1+JA",
+            nawd2: "https://via.placeholder.com/220x120.png?text=NAWD2+JA",
+            nawd3: "https://via.placeholder.com/220x120.png?text=NAWD3+JA",
+            superhaste: "https://via.placeholder.com/220x120.png?text=Super+Haste+JA",
+            richdistricts: "https://via.placeholder.com/220x120.png?text=1-2+Rich+Districts+JA"
+        }
+    },
+    "pt-pt": { 
+        projects: "Projetos", 
+        btnLink: "Link",
+        covers: {
+            nawd1: "https://via.placeholder.com/220x120.png?text=NAWD1+PT-PT",
+            nawd2: "https://via.placeholder.com/220x120.png?text=NAWD2+PT-PT",
+            nawd3: "https://via.placeholder.com/220x120.png?text=NAWD3+PT-PT",
+            superhaste: "https://via.placeholder.com/220x120.png?text=Super+Haste+PT-PT",
+            richdistricts: "https://via.placeholder.com/220x120.png?text=1-2+Rich+Districts+PT-PT"
+        }
+    },
+    "pt-br": { 
+        projects: "Projetos", 
+        btnLink: "Link",
+        covers: {
+            nawd1: "https://via.placeholder.com/220x120.png?text=NAWD1+PT-BR",
+            nawd2: "https://via.placeholder.com/220x120.png?text=NAWD2+PT-BR",
+            nawd3: "https://via.placeholder.com/220x120.png?text=NAWD3+PT-BR",
+            superhaste: "https://via.placeholder.com/220x120.png?text=Super+Haste+PT-BR",
+            richdistricts: "https://via.placeholder.com/220x120.png?text=1-2+Rich+Districts+PT-BR"
+        }
+    }
+};
+
+function setLang(lang) {
+    localStorage.setItem("lang", lang);
+    const data = translations[lang];
+
+    // Update texts
+    document.getElementById("projects-title").innerText = data.projects;
+    document.getElementById("btn-nawd1").innerText = data.btnLink;
+    document.getElementById("btn-nawd2").innerText = data.btnLink;
+    document.getElementById("btn-nawd3").innerText = data.btnLink;
+    document.getElementById("btn-superhaste").innerText = data.btnLink;
+    document.getElementById("btn-richdistricts").innerText = data.btnLink;
+
+    // Update images
+    document.querySelector('#btn-nawd1').previousElementSibling.src = data.covers.nawd1;
+    document.querySelector('#btn-nawd2').previousElementSibling.src = data.covers.nawd2;
+    document.querySelector('#btn-nawd3').previousElementSibling.src = data.covers.nawd3;
+    document.querySelector('#btn-superhaste').previousElementSibling.src = data.covers.superhaste;
+    document.querySelector('#btn-richdistricts').previousElementSibling.src = data.covers.richdistricts;
+}
+
+const savedLang = localStorage.getItem("lang") || "en";
+setLang(savedLang);
+</script>
+    
 };
 
 function setLang(lang) {
