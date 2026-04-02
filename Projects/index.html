@@ -1,110 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glass Jug Studios - Projects</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #0f172a;
-            color: #e5e7eb;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glass Jug Studios - Projects</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #0f172a;
+        color: #e5e7eb;
+    }
 
-        header {
-            text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, #1e293b, #020617);
-        }
+    header {
+        text-align: center;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #1e293b, #020617);
+    }
 
-        header img {
-            width: 150px;
-            border-radius: 20px;
-        }
+    header h1 {
+        margin: 15px 0 5px;
+        font-size: 2.5em;
+    }
 
-        header h1 {
-            margin: 15px 0 5px;
-            font-size: 2.5em;
-        }
+    nav {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        padding: 15px;
+        background-color: #020617;
+        flex-wrap: wrap;
+        align-items: center;
+    }
 
-        header p {
-            color: #94a3b8;
-        }
+    nav a, .lang-btn {
+        font-weight: bold;
+    }
 
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            padding: 15px;
-            background-color: #020617;
-            flex-wrap: wrap;
-            align-items: center;
-        }
+    nav a {
+        color: #38bdf8;
+        text-decoration: none;
+    }
 
-        nav a {
-            color: #38bdf8;
-            text-decoration: none;
-            font-weight: bold;
-        }
+    nav a:hover {
+        text-decoration: underline;
+    }
 
-        nav a:hover {
-            text-decoration: underline;
-        }
+    .lang-btn {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 6px;
+        background-color: #38bdf8;
+        color: #020617;
+        cursor: pointer;
+    }
 
-        .lang-btn {
-            padding: 5px 10px;
-            border: none;
-            border-radius: 6px;
-            background-color: #38bdf8;
-            color: #020617;
-            font-weight: bold;
-            cursor: pointer;
-        }
+    .lang-btn:hover {
+        background-color: #0ea5e9;
+    }
 
-        .lang-btn:hover {
-            background-color: #0ea5e9;
-        }
+    section {
+        max-width: 900px;
+        margin: auto;
+        padding: 40px 20px;
+    }
 
-        section {
-            max-width: 900px;
-            margin: auto;
-            padding: 40px 20px;
-        }
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 15px;
+    }
 
-        .card {
-            background-color: #1e293b;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 12px;
-        }
+    .card {
+        background-color: #1e293b;
+        padding: 15px;
+        border-radius: 12px;
+        text-align: center;
+    }
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #020617;
-            color: #64748b;
-        }
+    .card img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
 
-        .button {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 15px;
-            background-color: #38bdf8;
-            color: #020617;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-        }
+    .button {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 15px;
+        background-color: #38bdf8;
+        color: #020617;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+    }
 
-        .button:hover {
-            background-color: #0ea5e9;
-        }
-    </style>
+    .button:hover {
+        background-color: #0ea5e9;
+    }
+
+    footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #020617;
+        color: #64748b;
+    }
+
+    .close-btn {
+        position: fixed;
+        top: 10px;
+        right: 15px;
+        padding: 5px 10px;
+        background: #38bdf8;
+        color: #020617;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 6px;
+        z-index: 1000;
+    }
+
+    .close-btn:hover {
+        background-color: #0ea5e9;
+    }
+</style>
 </head>
 <body>
 
-<!-- Close button -->
 <a href="https://glass-jug.github.io/Glass-Jug-Hub/" class="close-btn">X</a>
 
 <header>
@@ -160,108 +180,53 @@
 
 <script>
 const translations = {
-    en: { 
-        projects: "Projects", 
-        btnLink: "Link",
-        covers: {
-            nawd1: "https://via.placeholder.com/220x120.png?text=NAWD1+EN",
-            nawd2: "https://via.placeholder.com/220x120.png?text=NAWD2+EN",
-            nawd3: "https://via.placeholder.com/220x120.png?text=NAWD3+EN",
-            superhaste: "https://via.placeholder.com/220x120.png?text=Super+Haste+EN",
-            richdistricts: "https://via.placeholder.com/220x120.png?text=1-2+Rich+Districts+EN"
-        }
+    en: { projects: "Projects", btnLink: "Link" },
+    cz: { projects: "Projekty", btnLink: "Odkaz" },
+    es: { projects: "Proyectos", btnLink: "Enlace" },
+    ja: { projects: "プロジェクト", btnLink: "リンク" },
+    "pt-pt": { projects: "Projetos", btnLink: "Link" },
+    "pt-br": { projects: "Projetos", btnLink: "Link" }
+};
+
+const covers = {
+    nawd1: {
+        en: "https://via.placeholder.com/220x120.png?text=NAWD1+EN",
+        cz: "https://via.placeholder.com/220x120.png?text=NAWD1+CZ"
     },
-    cz: { 
-        projects: "Projekty", 
-        btnLink: "Odkaz",
-        covers: {
-            nawd1: "https://via.placeholder.com/220x120.png?text=NAWD1+CZ",
-            nawd2: "https://via.placeholder.com/220x120.png?text=NAWD2+CZ",
-            nawd3: "https://via.placeholder.com/220x120.png?text=NAWD3+CZ",
-            superhaste: "https://via.placeholder.com/220x120.png?text=Super+Haste+CZ",
-            richdistricts: "https://via.placeholder.com/220x120.png?text=1-2+Rich+Districts+CZ"
-        }
+    nawd2: {
+        en: "https://via.placeholder.com/220x120.png?text=NAWD2+EN",
+        cz: "https://via.placeholder.com/220x120.png?text=NAWD2+CZ"
     },
-    es: { 
-        projects: "Proyectos", 
-        btnLink: "Enlace",
-        covers: {
-            nawd1: "https://via.placeholder.com/220x120.png?text=NAWD1+ES",
-            nawd2: "https://via.placeholder.com/220x120.png?text=NAWD2+ES",
-            nawd3: "https://via.placeholder.com/220x120.png?text=NAWD3+ES",
-            superhaste: "https://via.placeholder.com/220x120.png?text=Super+Haste+ES",
-            richdistricts: "https://via.placeholder.com/220x120.png?text=1-2+Rich+Districts+ES"
-        }
+    nawd3: {
+        en: "https://via.placeholder.com/220x120.png?text=NAWD3+EN",
+        cz: "https://via.placeholder.com/220x120.png?text=NAWD3+CZ"
     },
-    ja: { 
-        projects: "プロジェクト", 
-        btnLink: "リンク",
-        covers: {
-            nawd1: "https://via.placeholder.com/220x120.png?text=NAWD1+JA",
-            nawd2: "https://via.placeholder.com/220x120.png?text=NAWD2+JA",
-            nawd3: "https://via.placeholder.com/220x120.png?text=NAWD3+JA",
-            superhaste: "https://via.placeholder.com/220x120.png?text=Super+Haste+JA",
-            richdistricts: "https://via.placeholder.com/220x120.png?text=1-2+Rich+Districts+JA"
-        }
+    superhaste: {
+        en: "https://via.placeholder.com/220x120.png?text=Super+Haste+EN",
+        cz: "https://via.placeholder.com/220x120.png?text=Super+Haste+CZ"
     },
-    "pt-pt": { 
-        projects: "Projetos", 
-        btnLink: "Link",
-        covers: {
-            nawd1: "https://via.placeholder.com/220x120.png?text=NAWD1+PT-PT",
-            nawd2: "https://via.placeholder.com/220x120.png?text=NAWD2+PT-PT",
-            nawd3: "https://via.placeholder.com/220x120.png?text=NAWD3+PT-PT",
-            superhaste: "https://via.placeholder.com/220x120.png?text=Super+Haste+PT-PT",
-            richdistricts: "https://via.placeholder.com/220x120.png?text=1-2+Rich+Districts+PT-PT"
-        }
-    },
-    "pt-br": { 
-        projects: "Projetos", 
-        btnLink: "Link",
-        covers: {
-            nawd1: "https://via.placeholder.com/220x120.png?text=NAWD1+PT-BR",
-            nawd2: "https://via.placeholder.com/220x120.png?text=NAWD2+PT-BR",
-            nawd3: "https://via.placeholder.com/220x120.png?text=NAWD3+PT-BR",
-            superhaste: "https://via.placeholder.com/220x120.png?text=Super+Haste+PT-BR",
-            richdistricts: "https://via.placeholder.com/220x120.png?text=1-2+Rich+Districts+PT-BR"
-        }
+    richdistricts: {
+        en: "https://via.placeholder.com/220x120.png?text=1-2+Rich+Districts+EN",
+        cz: "https://via.placeholder.com/220x120.png?text=1-2+Rich+Districts+CZ"
     }
 };
 
 function setLang(lang) {
     localStorage.setItem("lang", lang);
-    const data = translations[lang];
 
-    // Update texts
-    document.getElementById("projects-title").innerText = data.projects;
-    document.getElementById("btn-nawd1").innerText = data.btnLink;
-    document.getElementById("btn-nawd2").innerText = data.btnLink;
-    document.getElementById("btn-nawd3").innerText = data.btnLink;
-    document.getElementById("btn-superhaste").innerText = data.btnLink;
-    document.getElementById("btn-richdistricts").innerText = data.btnLink;
-
-    // Update images
-    document.querySelector('#btn-nawd1').previousElementSibling.src = data.covers.nawd1;
-    document.querySelector('#btn-nawd2').previousElementSibling.src = data.covers.nawd2;
-    document.querySelector('#btn-nawd3').previousElementSibling.src = data.covers.nawd3;
-    document.querySelector('#btn-superhaste').previousElementSibling.src = data.covers.superhaste;
-    document.querySelector('#btn-richdistricts').previousElementSibling.src = data.covers.richdistricts;
-}
-
-const savedLang = localStorage.getItem("lang") || "en";
-setLang(savedLang);
-</script>
-    
-};
-
-function setLang(lang) {
-    localStorage.setItem("lang", lang);
     document.getElementById("projects-title").innerText = translations[lang].projects;
     document.getElementById("btn-nawd1").innerText = translations[lang].btnLink;
     document.getElementById("btn-nawd2").innerText = translations[lang].btnLink;
     document.getElementById("btn-nawd3").innerText = translations[lang].btnLink;
     document.getElementById("btn-superhaste").innerText = translations[lang].btnLink;
     document.getElementById("btn-richdistricts").innerText = translations[lang].btnLink;
+
+    // Update images safely
+    document.querySelector('#btn-nawd1').closest('.card').querySelector('img').src = covers.nawd1[lang] || covers.nawd1.en;
+    document.querySelector('#btn-nawd2').closest('.card').querySelector('img').src = covers.nawd2[lang] || covers.nawd2.en;
+    document.querySelector('#btn-nawd3').closest('.card').querySelector('img').src = covers.nawd3[lang] || covers.nawd3.en;
+    document.querySelector('#btn-superhaste').closest('.card').querySelector('img').src = covers.superhaste[lang] || covers.superhaste.en;
+    document.querySelector('#btn-richdistricts').closest('.card').querySelector('img').src = covers.richdistricts[lang] || covers.richdistricts.en;
 }
 
 const savedLang = localStorage.getItem("lang") || "en";
