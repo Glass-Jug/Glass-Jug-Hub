@@ -249,14 +249,10 @@ function setLang(lang) {
     localStorage.setItem("lang", lang);
 
     document.getElementById("nav-about").innerText = translations[lang].navAbout;
-    document.getElementById("nav-news").innerText = translations[lang].navNews;
     document.getElementById("nav-links").innerText = translations[lang].navLinks;
 
     document.getElementById("about-title").innerText = translations[lang].about;
     document.getElementById("about-text").innerText = translations[lang].aboutText;
-
-    document.getElementById("news-title").innerText = translations[lang].news;
-    document.getElementById("news-text").innerText = translations[lang].newsText;
 
     document.getElementById("links-title").innerText = translations[lang].links;
 
