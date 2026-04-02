@@ -10,31 +10,6 @@
             font-family: Arial, sans-serif;
             background-color: #0f172a;
             color: #e5e7eb;
-            position: relative;
-        }
-
-        /* Top-right X button */
-        .close-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #38bdf8;
-            color: #020617;
-            font-weight: bold;
-            border: none;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            font-size: 1.2em;
-            cursor: pointer;
-            text-align: center;
-            line-height: 36px;
-            z-index: 1000;
-            text-decoration: none;
-        }
-
-        .close-btn:hover {
-            background-color: #0ea5e9;
         }
 
         header {
@@ -43,59 +18,78 @@
             background: linear-gradient(135deg, #1e293b, #020617);
         }
 
+        header img {
+            width: 150px;
+            border-radius: 20px;
+        }
+
         header h1 {
-            margin: 0;
+            margin: 15px 0 5px;
             font-size: 2.5em;
         }
 
+        header p {
+            color: #94a3b8;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+            background-color: #020617;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        nav a {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .lang-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 6px;
+            background-color: #38bdf8;
+            color: #020617;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .lang-btn:hover {
+            background-color: #0ea5e9;
+        }
+
         section {
-            max-width: 1200px;
+            max-width: 900px;
             margin: auto;
             padding: 40px 20px;
         }
 
-        #projects-title {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2em;
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
         .card {
             background-color: #1e293b;
-            padding: 15px;
+            padding: 20px;
+            margin: 15px 0;
             border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.2s;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .card p {
+        footer {
             text-align: center;
-            margin: 0 0 10px 0;
-            font-weight: bold;
+            padding: 20px;
+            background-color: #020617;
+            color: #64748b;
         }
 
         .button {
-            padding: 8px 12px;
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 15px;
             background-color: #38bdf8;
             color: #020617;
             border-radius: 8px;
@@ -105,13 +99,6 @@
 
         .button:hover {
             background-color: #0ea5e9;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #020617;
-            color: #64748b;
         }
     </style>
 </head>
