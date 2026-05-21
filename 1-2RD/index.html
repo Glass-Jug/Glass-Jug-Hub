@@ -5,8 +5,18 @@
 <title>Rich District Run</title>
 
 <style>
-body{margin:0;overflow:hidden;background:#0b1320;font-family:sans-serif}
-canvas{display:block;margin:auto}
+body{
+margin:0;
+overflow:hidden;
+background:#0b1320;
+font-family:sans-serif;
+touch-action:none;
+}
+
+canvas{
+display:block;
+margin:auto;
+}
 
 #ui{
 position:absolute;
@@ -14,6 +24,7 @@ top:10px;
 left:10px;
 color:white;
 font-size:18px;
+z-index:10;
 }
 
 #timer{
@@ -23,6 +34,7 @@ right:20px;
 color:white;
 font-size:22px;
 font-weight:bold;
+z-index:10;
 }
 
 #mobileControls{
@@ -34,6 +46,7 @@ display:flex;
 justify-content:space-between;
 padding:0 20px;
 pointer-events:none;
+z-index:20;
 }
 
 .controlGroup{
@@ -50,18 +63,24 @@ border-radius:12px;
 border:none;
 background:#ffffff33;
 color:white;
+backdrop-filter:blur(4px);
 }
 
 button:active{
 background:#ffffff66;
 }
 </style>
-
 </head>
+
 <body>
 
-<div id="ui">Coins: <span id="coins">0</span></div>
-<div id="timer">00:00.000</div>
+<div id="ui">
+Coins: <span id="coins">0</span>
+</div>
+
+<div id="timer">
+00:00.000
+</div>
 
 <canvas id="game" width="900" height="500"></canvas>
 
@@ -84,19 +103,50 @@ const canvas=document.getElementById("game")
 const ctx=canvas.getContext("2d")
 
 const timerEl=document.getElementById("timer")
+const coinsEl=document.getElementById("coins")
 
 const keys={}
-document.addEventListener("keydown",e=>keys[e.key.toLowerCase()]=true)
-document.addEventListener("keyup",e=>keys[e.key.toLowerCase()]=false)
+
+document.addEventListener("keydown",e=>{
+
+if(e.key===" ") e.preventDefault()
+
+keys[e.key.toLowerCase()]=true
+})
+
+document.addEventListener("keyup",e=>{
+keys[e.key.toLowerCase()]=false
+})
 
 function bindButton(id,key){
+
 const btn=document.getElementById(id)
 
-btn.addEventListener("touchstart",()=>keys[key]=true)
-btn.addEventListener("touchend",()=>keys[key]=false)
+btn.addEventListener("touchstart",e=>{
+e.preventDefault()
+keys[key]=true
+})
 
-btn.addEventListener("mousedown",()=>keys[key]=true)
-btn.addEventListener("mouseup",()=>keys[key]=false)
+btn.addEventListener("touchend",e=>{
+e.preventDefault()
+keys[key]=false
+})
+
+btn.addEventListener("touchcancel",()=>{
+keys[key]=false
+})
+
+btn.addEventListener("mousedown",()=>{
+keys[key]=true
+})
+
+btn.addEventListener("mouseup",()=>{
+keys[key]=false
+})
+
+btn.addEventListener("mouseleave",()=>{
+keys[key]=false
+})
 }
 
 bindButton("left","a")
@@ -137,6 +187,7 @@ let timerRunning=false
 let finished=false
 
 function formatTime(t){
+
 let ms=Math.floor((t%1)*1000)
 let s=Math.floor(t)%60
 let m=Math.floor(t/60)
@@ -149,7 +200,9 @@ String(ms).padStart(3,"0")
 }
 
 const platforms=[]
+
 for(let i=0;i<120;i++){
+
 platforms.push({
 x:i*220,
 y:350-Math.sin(i*0.7)*120,
@@ -160,7 +213,9 @@ checkpoint:i%12===0
 }
 
 const coins=[]
+
 for(let i=0;i<90;i++){
+
 coins.push({
 x:i*240+120,
 y:250-Math.sin(i)*100,
@@ -170,7 +225,9 @@ taken:false
 }
 
 const enemies=[]
+
 for(let i=6;i<120;i+=10){
+
 enemies.push({
 x:i*220,
 y:310,
@@ -178,9 +235,15 @@ dir:1
 })
 }
 
-const finish={x:24000,y:150,w:60,h:200}
+const finish={
+x:24000,
+y:150,
+w:60,
+h:200
+}
 
 function respawn(){
+
 player.x=respawnX
 player.y=respawnY
 player.vx=0
@@ -190,6 +253,7 @@ player.vy=0
 function update(dt){
 
 if(!finished && timerRunning){
+
 timer+=dt
 timerEl.innerText=formatTime(timer)
 }
@@ -199,21 +263,25 @@ player.vx=0
 if(keys["a"]) player.vx=-player.speed
 if(keys["d"]) player.vx=player.speed
 
-if(keys["a"]||keys["d"]||keys[" "]){
+if(keys["a"] || keys["d"] || keys[" "]){
 timerRunning=true
 }
 
 if(keys[" "]){
+
 if(player.ground){
+
 player.vy=-player.jump
 player.ground=false
 player.doubleJump=true
+keys[" "]=false
 }
 else if(player.doubleJump){
+
 player.vy=-player.jump
 player.doubleJump=false
-}
 keys[" "]=false
+}
 }
 
 player.vy+=gravity*dt
@@ -225,17 +293,20 @@ player.ground=false
 
 for(let p of platforms){
 
-if(player.x+player.w>p.x &&
+if(
+player.x+player.w>p.x &&
 player.x<p.x+p.w &&
 player.y+player.h>p.y &&
 player.y+player.h<p.y+30 &&
-player.vy>=0){
+player.vy>=0
+){
 
 player.y=p.y-player.h
 player.vy=0
 player.ground=true
 
 if(p.checkpoint){
+
 respawnX=p.x
 respawnY=p.y-60
 }
@@ -244,43 +315,61 @@ respawnY=p.y-60
 
 for(let c of coins){
 
-if(!c.taken &&
+if(
+!c.taken &&
 player.x<c.x+10 &&
 player.x+player.w>c.x-10 &&
 player.y<c.y+10 &&
-player.y+player.h>c.y-10){
+player.y+player.h>c.y-10
+){
 
 c.taken=true
 coinsCollected++
-document.getElementById("coins").innerText=coinsCollected
+coinsEl.innerText=coinsCollected
 }
 }
 
 for(let e of enemies){
 
 e.x+=e.dir*80*dt
-if(Math.random()<0.01)e.dir*=-1
 
-if(player.x<e.x+40 &&
+if(Math.random()<0.01){
+e.dir*=-1
+}
+
+if(
+player.x<e.x+40 &&
 player.x+player.w>e.x &&
 player.y<e.y+40 &&
-player.y+player.h>e.y){
-
+player.y+player.h>e.y
+){
 respawn()
 }
 }
 
-if(player.y>800) respawn()
+if(player.y>800){
+respawn()
+}
 
 if(player.x>finish.x && !finished){
+
 finished=true
 timerRunning=false
+
 alert("Finished! Time: "+formatTime(timer))
+}
+
+cameraX=player.x-250
+
+if(cameraX<0){
+cameraX=0
+}
 }
 
 function drawBackground(){
 
 let grad=ctx.createLinearGradient(0,0,0,canvas.height)
+
 grad.addColorStop(0,"#3a6bd6")
 grad.addColorStop(1,"#9ed0ff")
 
@@ -290,11 +379,12 @@ ctx.fillRect(0,0,canvas.width,canvas.height)
 ctx.fillStyle="#1b2a52"
 
 for(let i=0;i<20;i++){
+
 let x=(i*400-cameraX*0.2)%900
+
 ctx.fillRect(x,260,120,200)
 ctx.fillRect(x+30,230,60,40)
 }
-
 }
 
 function draw(){
@@ -302,16 +392,26 @@ function draw(){
 drawBackground()
 
 ctx.save()
+
 ctx.translate(-cameraX,0)
 
 ctx.fillStyle="#d4af37"
 
 for(let p of platforms){
+
 ctx.fillRect(p.x,p.y,p.w,p.h)
 
 if(p.checkpoint){
+
 ctx.fillStyle="#00ffd0"
-ctx.fillRect(p.x+p.w/2-5,p.y-40,10,40)
+
+ctx.fillRect(
+p.x+p.w/2-5,
+p.y-40,
+10,
+40
+)
+
 ctx.fillStyle="#d4af37"
 }
 }
@@ -319,7 +419,9 @@ ctx.fillStyle="#d4af37"
 ctx.fillStyle="gold"
 
 for(let c of coins){
+
 if(!c.taken){
+
 ctx.beginPath()
 ctx.arc(c.x,c.y,c.r,0,Math.PI*2)
 ctx.fill()
@@ -327,20 +429,56 @@ ctx.fill()
 }
 
 for(let e of enemies){
+
+if(enemyImg.complete){
+
 ctx.drawImage(enemyImg,e.x,e.y,40,40)
+}
+else{
+
+ctx.fillStyle="red"
+ctx.fillRect(e.x,e.y,40,40)
+}
 }
 
 ctx.fillStyle="white"
-ctx.fillRect(finish.x,finish.y,finish.w,finish.h)
 
-ctx.drawImage(playerImg,player.x,player.y,player.w,player.h)
+ctx.fillRect(
+finish.x,
+finish.y,
+finish.w,
+finish.h
+)
+
+if(playerImg.complete){
+
+ctx.drawImage(
+playerImg,
+player.x,
+player.y,
+player.w,
+player.h
+)
+}
+else{
+
+ctx.fillStyle="cyan"
+
+ctx.fillRect(
+player.x,
+player.y,
+player.w,
+player.h
+)
+}
 
 ctx.restore()
 }
 
 function loop(t){
 
-let dt=(t-lastTime)/1000
+let dt=Math.min((t-lastTime)/1000,0.033)
+
 lastTime=t
 
 update(dt)
