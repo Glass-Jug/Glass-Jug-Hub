@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Epilepson in the Great Meadow</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      overflow: hidden;
+      background: linear-gradient(to bottom, #6bc7ff 0%, #d8f0ff 55%, #ffffff 100%);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    .hud {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      color: white;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      z-index: 10;
+    }
+
+    .hud h1 {
+      font-size: 26px;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .hud p {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.45);
+      z-index: 20;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.96);
+      padding: 36px;
+      border-radius: 24px;
+      width: min(90vw, 460px);
+      text-align: center;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.25);
+    }
+
+    .card h2 {
+      margin-bottom: 16px;
+      font-size: 34px;
+      color: #1e293b;
+    }
+
+    .card p {
+      color: #334155;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    button {
+      border: none;
+      background: #2563eb;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: transform 0.15s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="hud">
+    <h1>EPILEPSON IN THE GREAT MEADOW</h1>
+    <p>Distance: <span id="distance">0</span>m</p>
+    <p>Speed: <span id="speed">0</span></p>
+    <p>Last KM: <span id="kmTime">--</span></p>
+  </div>
+
+  <div class="overlay" id="menu">
+    <div class="card">
+      <h2>Epilepson in the Great Meadow</h2>
+      <p>This text is here for you, dear player.</p>
+      <p><strong>Controls</strong></p>
+      <p>W / Space → Jump</p>
+      <p>A / D → Move</p>
+      <p>Shift → Dash</p>
+      <button id="startBtn">Start Run</button>
+    </div>
+  </div>
+
+
+  <audio id="bgMusic" src="Music.wav" loop autoplay></audio>
+
+  <canvas id="game"></canvas>
+
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+
+    const distanceLabel = document.getElementById('distance');
+    const speedLabel = document.getElementById('speed');
+    const kmTimeLabel = document.getElementById('kmTime');
+    const menu = document.getElementById('menu');
+    const startBtn = document.getElementById('startBtn');
+
+    const bgMusic = document.getElementById('bgMusic');
+
+    function ensureMusicPlaying() {
+      if (bgMusic.paused) {
+        bgMusic.play().catch(() => {});
+      }
+    }
+
+
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+
+    canvas.width = width;
+    canvas.height = height;
+
+    const gravity = 3200;
+    const playerImage = new Image();
+    playerImage.src = 'PlayerCharacter.png';
+    
+    const keys = {};
+
+    let gameStarted = false;
+    let worldSpeed = 600;
+    let distance = 0;
+    let elapsedTime = 0;
+    let lastTimestamp = 0;
+    let nextKilometre = 1000;
+
+    class Player {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = 180;
+        this.y = height / 2;
+        this.width = 52;
+        this.height = 52;
+        this.vx = 0;
+        this.vy = 0;
+        this.grounded = false;
+        this.dashing = false;
+        this.dashCooldown = 0;
+        this.dashTime = 0;
+      }
+
+      update(delta) {
+        if (keys['a'] || keys['ArrowLeft']) {
+          this.vx -= 2400 * delta;
+        }
+
+        if (keys['d'] || keys['ArrowRight']) {
+          this.vx += 2400 * delta;
+        }
+
+        this.vx *= Math.pow(0.86, delta * 60);
+
+        if ((keys[' '] || keys['w'] || keys['ArrowUp']) && this.grounded) {
+          this.vy = -1250;
+          this.grounded = false;
+        }
+
+        if (keys['Shift'] && this.dashCooldown <= 0) {
+          this.dashing = true;
+          this.dashCooldown = 0.8;
+          this.dashTime = 0.16;
+          this.vx += 1300;
+        }
+
+        if (this.dashing) {
+          this.dashTime -= delta;
+          if (this.dashTime <= 0) {
+            this.dashing = false;
+          }
+        }
+
+        this.dashCooldown -= delta;
+        this.vy += gravity * delta;
+
+        this.x += this.vx * delta;
+        this.y += this.vy * delta;
+
+        if (this.x < 50) this.x = 50;
+        if (this.x > width * 0.55) this.x = width * 0.55;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+
+        ctx.shadowColor = '#7df9ff';
+        ctx.shadowBlur = 18;
+
+        if (playerImage.complete) {
+          ctx.drawImage(playerImage, -this.width / 2, -this.height / 2, this.width, this.height);
+        } else {
+          ctx.fillStyle = this.dashing ? '#ffffff' : '#38bdf8';
+          ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
+        }
+
+        ctx.shadowBlur = 0;
+
+
+        ctx.restore();
+      }
+    }
+
+    class Platform {
+      constructor(x, y, w, h) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+      }
+
+      update(delta) {
+        this.x -= worldSpeed * delta;
+      }
+
+      draw() {
+        const gradient = ctx.createLinearGradient(this.x, this.y, this.x, this.y + this.h);
+        gradient.addColorStop(0, '#475569');
+        gradient.addColorStop(1, '#1e293b');
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(this.x, this.y, this.w, this.h);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(this.x, this.y, this.w, 6);
+      }
+    }
+
+    class RainbowOrb {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.radius = 12;
+        this.hue = Math.random() * 360;
+      }
+
+      update(delta) {
+        this.x -= worldSpeed * delta;
+        this.hue += 120 * delta;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.fillStyle = `hsl(${this.hue}, 100%, 60%)`;
+        ctx.shadowColor = `hsl(${this.hue}, 100%, 70%)`;
+        ctx.shadowBlur = 18;
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 180;
+        this.vy = (Math.random() - 0.5) * 180;
+        this.life = 1;
+        this.size = Math.random() * 4 + 2;
+      }
+
+      update(delta) {
+        this.x += this.vx * delta;
+        this.y += this.vy * delta;
+        this.vy += 400 * delta;
+        this.life -= delta * 2;
+      }
+
+      draw() {
+        ctx.globalAlpha = Math.max(this.life, 0);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(this.x, this.y, this.size, this.size);
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    const player = new Player();
+    const platforms = [];
+    const particles = [];
+    const orbs = [];
+
+    function spawnInitialPlatforms() {
+      platforms.length = 0;
+
+      let x = 0;
+      for (let i = 0; i < 12; i++) {
+        const w = 220 + Math.random() * 180;
+        const y = height * (0.55 + Math.random() * 0.28);
+
+        platforms.push(new Platform(x, y, w, 24));
+        x += w + 90;
+      }
+    }
+
+    function spawnPlatform() {
+      const last = platforms[platforms.length - 1];
+      const gap = 90 + Math.random() * 130;
+      const w = 180 + Math.random() * 220;
+      const y = height * (0.45 + Math.random() * 0.35);
+
+      const platform = new Platform(last.x + last.w + gap, y, w, 24);
+      platforms.push(platform);
+
+      if (Math.random() < 0.7) {
+        orbs.push(new RainbowOrb(
+          platform.x + platform.w / 2,
+          platform.y - 50
+        ));
+      }
+    }
+
+    function drawBackground() {
+      ctx.fillStyle = '#87d7ff';
+      ctx.fillRect(0, 0, width, height);
+
+      for (let i = 0; i < 12; i++) {
+        const cloudX = (i * 320 - (elapsedTime * 40) % 3400);
+        const cloudY = 60 + (i % 5) * 60;
+
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.beginPath();
+        ctx.arc(cloudX, cloudY, 30, 0, Math.PI * 2);
+        ctx.arc(cloudX + 30, cloudY + 5, 24, 0, Math.PI * 2);
+        ctx.arc(cloudX - 25, cloudY + 8, 22, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.fillStyle = '#d9f99d';
+      ctx.fillRect(0, height - 90, width, 90);
+    }
+
+    function updatePlatforms(delta) {
+      player.grounded = false;
+
+      platforms.forEach(platform => {
+        platform.update(delta);
+
+        const withinX = player.x + player.width > platform.x &&
+                        player.x < platform.x + platform.w;
+
+        const touchingTop = player.y + player.height >= platform.y &&
+                            player.y + player.height <= platform.y + platform.h + 18;
+
+        if (withinX && touchingTop && player.vy >= 0) {
+          player.y = platform.y - player.height;
+          player.vy = 0;
+          player.grounded = true;
+
+          if (Math.random() < 0.18) {
+            particles.push(new Particle(player.x + player.width / 2, player.y + player.height));
+          }
+        }
+      });
+
+      while (platforms[0] && platforms[0].x + platforms[0].w < -100) {
+        platforms.shift();
+        spawnPlatform();
+      }
+    }
+
+    function updateParticles(delta) {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update(delta);
+
+        if (particles[i].life <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+    }
+
+    function drawParticles() {
+      particles.forEach(p => p.draw());
+    }
+
+    function updateOrbs(delta) {
+      for (let i = orbs.length - 1; i >= 0; i--) {
+        const orb = orbs[i];
+        orb.update(delta);
+
+        const dx = (player.x + player.width / 2) - orb.x;
+        const dy = (player.y + player.height / 2) - orb.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < orb.radius + 28) {
+          worldSpeed += 120;
+
+          for (let j = 0; j < 14; j++) {
+            particles.push(new Particle(orb.x, orb.y));
+          }
+
+          orbs.splice(i, 1);
+          continue;
+        }
+
+        if (orb.x < -100) {
+          orbs.splice(i, 1);
+        }
+      }
+    }
+
+    function drawOrbs() {
+      orbs.forEach(orb => orb.draw());
+    }
+
+    function drawPlatforms() {
+      platforms.forEach(p => p.draw());
+    }
+
+    function gameOver() {
+      gameStarted = false;
+      menu.classList.remove('hidden');
+
+      menu.querySelector('.card').innerHTML = `
+        <h2>Run Over</h2>
+        <p>You travelled <strong>${Math.floor(distance)}m</strong></p>
+        <p>Total time: <strong>${elapsedTime.toFixed(2)}s</strong></p>
+        <button id="restartBtn">Restart</button>
+      `;
+
+      document.getElementById('restartBtn').onclick = startGame;
+    }
+
+    function updateHUD() {
+      distanceLabel.textContent = Math.floor(distance);
+      speedLabel.textContent = Math.floor(worldSpeed);
+    }
+
+    function update(timestamp = 0) {
+      if (!gameStarted) return;
+
+      const delta = Math.min((timestamp - lastTimestamp) / 1000 || 0.016, 0.033);
+      lastTimestamp = timestamp;
+
+      elapsedTime += delta;
+
+  
+    document.addEventListener('click', ensureMusicPlaying);
+    document.addEventListener('keydown', ensureMusicPlaying);
+
+    bgMusic.addEventListener('ended', () => {
+      bgMusic.currentTime = 0;
+      ensureMusicPlaying();
+    });
+
+    drawBackground();
+
+      worldSpeed += 8 * delta;
+      distance += worldSpeed * delta * 0.1;
+
+      if (distance >= nextKilometre) {
+        kmTimeLabel.textContent = `${elapsedTime.toFixed(2)}s`;
+        nextKilometre += 1000;
+      }
+
+      updatePlatforms(delta);
+      updateOrbs(delta);
+      player.update(delta);
+      updateParticles(delta);
+
+      drawPlatforms();
+      drawOrbs();
+      drawParticles();
+      player.draw();
+
+      updateHUD();
+
+      if (player.y > height + 300) {
+        gameOver();
+        return;
+      }
+
+      requestAnimationFrame(update);
+    }
+
+    function startGame() {
+      menu.classList.add('hidden');
+
+      worldSpeed = 600;
+      distance = 0;
+      elapsedTime = 0;
+      nextKilometre = 1000;
+      kmTimeLabel.textContent = '--';
+
+      player.reset();
+      orbs.length = 0;
+      spawnInitialPlatforms();
+
+      lastTimestamp = performance.now();
+      gameStarted = true;
+
+      requestAnimationFrame(update);
+    }
+
+    startBtn.onclick = startGame;
+
+    window.addEventListener('keydown', e => {
+      keys[e.key] = true;
+
+      if ([' ', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+      }
+    });
+
+    window.addEventListener('keyup', e => {
+      keys[e.key] = false;
+    });
+
+    window.addEventListener('resize', () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    });
+
+    drawBackground();
+  </script>
+</body>
+</html>
